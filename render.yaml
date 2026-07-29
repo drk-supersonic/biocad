@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: gantt-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_MODEL
+        value: google/gemini-2.5-flash
+      - key: CORS_ORIGINS
+        value: https://gantt-frontend.onrender.com
+    # Ключ OpenRouter НЕ хранится тут — пользователь вводит его в интерфейсе,
+    # он приходит в теле запроса на /api/chat и нигде на сервере не сохраняется.
+
+  - type: web
+    name: gantt-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gantt-backend.onrender.com

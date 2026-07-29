@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+
+# Node / фронт
+node_modules/
+dist/
+.vite/
+
+# Секреты
+.env
+.env.local
+
+# ОС/IDE
+.DS_Store
+.vscode/
+*.swp
