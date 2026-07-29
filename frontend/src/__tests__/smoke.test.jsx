@@ -62,7 +62,7 @@ describe("ChatPanel", () => {
     render(<ChatPanel apiKey="" onTasksUpdated={vi.fn()} />);
     const textarea = screen.getByPlaceholderText(/перенеси тестирование/);
     fireEvent.change(textarea, { target: { value: "перенеси задачу" } });
-    fireEvent.click(screen.getByText("Отправить"));
+    fireEvent.click(screen.getByRole("button", { name: "Отправить" }));
     return screen.findByText(/ключ OpenRouter/);
   });
 });
