@@ -43,8 +43,6 @@ export default function GanttChart({ tasks, onSelectTask }) {
       <Gantt
         tasks={ganttTasks}
         viewMode={ViewMode.Day}
-        listCellWidth="180"
-        columnWidth={40}
         onClick={(task) => onSelectTask(task.id)}
         onDoubleClick={(task) => onSelectTask(task.id)}
       />
