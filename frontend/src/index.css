@@ -215,6 +215,40 @@ textarea:focus-visible {
   color: var(--text);
 }
 
+/* Тонкий скроллбар вместо жирного системного — на всех прокручиваемых
+   панелях (диаграмма, чат). Firefox — через scrollbar-width/color,
+   остальные браузеры — через ::-webkit-scrollbar. */
+.gantt-card,
+.chat-panel__messages {
+  scrollbar-width: thin;
+  scrollbar-color: #d3d2e0 transparent;
+}
+
+.gantt-card::-webkit-scrollbar,
+.chat-panel__messages::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.gantt-card::-webkit-scrollbar-track,
+.chat-panel__messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gantt-card::-webkit-scrollbar-thumb,
+.chat-panel__messages::-webkit-scrollbar-thumb {
+  background: #d3d2e0;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.gantt-card::-webkit-scrollbar-thumb:hover,
+.chat-panel__messages::-webkit-scrollbar-thumb:hover {
+  background: #b9b7d1;
+  background-clip: padding-box;
+}
+
 .gantt-card__toolbar {
   display: flex;
   gap: 6px;
@@ -257,11 +291,56 @@ textarea:focus-visible {
 }
 
 .gantt-list-header__cell {
-  padding: 0 12px;
+  flex-shrink: 0;
+  padding: 0 14px;
   font-weight: 700;
   font-size: 12.5px;
   letter-spacing: 0.02em;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid var(--border);
+}
+
+.gantt-list-table {
+  border-bottom: 1px solid var(--border);
+}
+
+.gantt-list-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.gantt-list-row:nth-child(even) {
+  background: #fbfbfd;
+}
+
+.gantt-list-cell {
+  flex-shrink: 0;
+  min-width: 0;
+  padding: 0 14px;
+  font-size: 13px;
+  color: var(--text);
+  border-right: 1px solid var(--border);
+}
+
+.gantt-list-cell--name {
+  padding-right: 20px; /* гарантированный зазор перед следующей колонкой */
+}
+
+.gantt-list-cell__truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gantt-list-cell--date {
+  color: var(--text-muted);
+  font-size: 12.5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
