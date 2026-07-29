@@ -20,10 +20,10 @@ function toGanttTasks(tasks) {
       dependencies: t.predecessors || [],
       isDisabled: true, // редактирование — только через чат, не drag-n-drop
       styles: {
-        backgroundColor: "#e8a33d",
-        backgroundSelectedColor: "#f0af54",
-        progressColor: "#c98a2e",
-        progressSelectedColor: "#c98a2e",
+        backgroundColor: "#6d5ef4",
+        backgroundSelectedColor: "#8677f7",
+        progressColor: "#564adf",
+        progressSelectedColor: "#564adf",
       },
     }));
 }
@@ -88,6 +88,7 @@ export default function GanttChart({ tasks, onSelectTask }) {
         viewMode={viewMode}
         locale="ru"
         TaskListHeader={TaskListHeader}
+        todayColor="rgba(109, 94, 244, 0.08)"
         onClick={(task) => onSelectTask(task.id)}
         onDoubleClick={(task) => onSelectTask(task.id)}
       />

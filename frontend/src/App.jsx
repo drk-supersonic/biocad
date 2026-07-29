@@ -104,6 +104,7 @@ export default function App() {
             <div className="gantt-pane__empty">Загружаю план…</div>
           ) : tasks.length === 0 ? (
             <div className="empty-state">
+              <div className="empty-state__icon">📋</div>
               <h2>Задач пока нет</h2>
               <p>Загрузи Excel с планом или подожди — сервер засеет тестовые данные при первом обращении.</p>
             </div>

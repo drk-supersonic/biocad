@@ -1,16 +1,22 @@
 :root {
-  --bg: #12151b;
-  --surface: #1a1f28;
-  --surface-raised: #212836;
-  --border: #2a3140;
-  --text: #e7e9ee;
-  --text-muted: #8b93a3;
-  --accent: #e8a33d;
-  --accent-dim: #7a5a2a;
-  --accent-text: #1a1206;
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-sunken: #f0f1f5;
+  --border: #e6e8ee;
+  --text: #1e2230;
+  --text-muted: #8b90a0;
+  --accent: #6d5ef4;
+  --accent-hover: #5b4de0;
+  --accent-soft: #efecfe;
+  --accent-text: #ffffff;
   --danger: #e0664f;
-  --ok: #5fb890;
-  --font-body: -apple-system, "Inter", "Segoe UI", Roboto, sans-serif;
+  --danger-soft: #fdecea;
+  --ok: #2fb380;
+  --shadow-sm: 0 1px 2px rgba(30, 34, 48, 0.05), 0 1px 1px rgba(30, 34, 48, 0.03);
+  --shadow-md: 0 8px 24px rgba(30, 34, 48, 0.08), 0 2px 6px rgba(30, 34, 48, 0.04);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-body: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SFMono-Regular", ui-monospace, "Menlo", monospace;
 }
 
@@ -45,6 +51,8 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 20px;
+  gap: 16px;
 }
 
 /* ─── Toolbar ─────────────────────────────────────────────── */
@@ -53,16 +61,18 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
+  padding: 16px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
 }
 
 .toolbar__title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
   color: var(--text);
   white-space: nowrap;
 }
@@ -85,26 +95,32 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 999px;
   border: 1px solid var(--border);
-  background: var(--surface-raised);
+  background: var(--surface);
   color: var(--text);
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
   white-space: nowrap;
 }
 
 .btn:hover {
-  border-color: var(--accent-dim);
-  background: #262d3a;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn--primary {
@@ -114,21 +130,27 @@ textarea:focus-visible {
 }
 
 .btn--primary:hover {
-  background: #f0af54;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-text);
 }
 
 .input {
-  padding: 7px 10px;
+  padding: 8px 12px;
   font-size: 13px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface-sunken);
   color: var(--text);
   min-width: 0;
 }
 
 .input::placeholder {
   color: var(--text-muted);
+}
+
+.input:focus-visible {
+  background: var(--surface);
 }
 
 .api-key-field {
@@ -138,13 +160,13 @@ textarea:focus-visible {
 }
 
 .api-key-field .input {
-  width: 220px;
+  width: 230px;
   padding-right: 34px;
 }
 
 .api-key-field__status {
   position: absolute;
-  right: 10px;
+  right: 12px;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -160,71 +182,65 @@ textarea:focus-visible {
 .main {
   flex: 1;
   display: flex;
+  gap: 16px;
   min-height: 0;
 }
 
 .gantt-pane {
   flex: 1;
   min-width: 0;
-  overflow: auto;
-  padding: 20px;
-  background: var(--bg);
+  display: flex;
 }
 
 .gantt-pane__empty {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  height: 100%;
   color: var(--text-muted);
   font-size: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
 }
 
-/* gantt-task-react использует захардкоженные светлые цвета и хэшированные
-   CSS-классы без переменных для темизации — глубокий override был бы
-   хрупким и мог сломаться при обновлении версии. Вместо этого сознательно
-   оформляем диаграмму как светлый "лист расписания" на тёмной панели —
-   это читаемее для плотной сетки дат, чем принудительная тёмная тема. */
 .gantt-card {
-  background: #f7f6f3;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
   overflow: auto;
-  height: 100%;
-  /* Наследование var(--text) (почти белый) из body делало текст списка
-     задач и дат нечитаемым на светлом фоне карточки — задаём тёмный цвет
-     явно. SVG-подписи внутри баров используют fill, а не color, и не
-     заданы через классы (только инлайн-стили), так что это правило их
-     не затрагивает и не портит белый текст на оранжевых барах. */
-  color: #2b2b2b;
+  flex: 1;
+  color: var(--text);
 }
 
 .gantt-card__toolbar {
   display: flex;
   gap: 6px;
-  padding: 10px 12px;
-  border-bottom: 1px solid #e4e1d9;
-  background: #f7f6f3;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
 .gantt-view-btn {
-  padding: 5px 12px;
+  padding: 6px 14px;
   font-size: 12.5px;
   font-weight: 600;
-  border-radius: 6px;
-  border: 1px solid #ddd9cd;
-  background: #fff;
-  color: #5a5647;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-sunken);
+  color: var(--text-muted);
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .gantt-view-btn:hover {
   border-color: var(--accent);
-  color: #2b2b2b;
+  color: var(--accent-hover);
 }
 
 .gantt-view-btn--active {
@@ -236,15 +252,16 @@ textarea:focus-visible {
 .gantt-list-header {
   display: flex;
   align-items: center;
-  background: #f0eee7;
-  border-bottom: 2px solid #e4e1d9;
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
 }
 
 .gantt-list-header__cell {
-  padding: 0 10px;
+  padding: 0 12px;
   font-weight: 700;
-  font-size: 13px;
-  color: #5a5647;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -257,14 +274,17 @@ textarea:focus-visible {
   min-width: 360px;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .chat-panel__header {
-  padding: 14px 16px;
+  padding: 16px 18px;
   border-bottom: 1px solid var(--border);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -283,8 +303,8 @@ textarea:focus-visible {
 .chat-msg {
   font-size: 13.5px;
   line-height: 1.5;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   max-width: 92%;
   white-space: pre-wrap;
   word-break: break-word;
@@ -294,19 +314,21 @@ textarea:focus-visible {
   align-self: flex-end;
   background: var(--accent);
   color: var(--accent-text);
+  border-bottom-right-radius: 4px;
 }
 
 .chat-msg--assistant {
   align-self: flex-start;
-  background: var(--surface-raised);
+  background: var(--surface-sunken);
   border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
 }
 
 .chat-msg--error {
   align-self: flex-start;
-  background: rgba(224, 102, 79, 0.12);
-  border: 1px solid var(--danger);
-  color: #f2b3a6;
+  background: var(--danger-soft);
+  border: 1px solid rgba(224, 102, 79, 0.3);
+  color: #a83f2c;
 }
 
 .chat-msg--system {
@@ -322,7 +344,7 @@ textarea:focus-visible {
 .chat-panel__form {
   display: flex;
   gap: 8px;
-  padding: 12px;
+  padding: 14px;
   border-top: 1px solid var(--border);
 }
 
@@ -333,7 +355,7 @@ textarea:focus-visible {
   max-height: 120px;
   font-size: 13.5px;
   line-height: 1.4;
-  padding: 9px 10px;
+  padding: 9px 12px;
 }
 
 .typing-dots {
@@ -369,7 +391,8 @@ textarea:focus-visible {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 10, 14, 0.6);
+  background: rgba(30, 34, 48, 0.35);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,9 +405,9 @@ textarea:focus-visible {
   max-width: 460px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: var(--shadow-md);
 }
 
 .modal__header {
@@ -392,13 +415,14 @@ textarea:focus-visible {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .modal__title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .modal__id {
@@ -409,17 +433,24 @@ textarea:focus-visible {
 }
 
 .modal__close {
-  background: none;
+  background: var(--surface-sunken);
   border: none;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
   color: var(--text-muted);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
-  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .modal__close:hover {
-  color: var(--text);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
 }
 
 .modal__field {
@@ -447,18 +478,34 @@ textarea:focus-visible {
 
 .badge {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 999px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-weight: 600;
   font-size: 12px;
 }
 
 .empty-state {
   max-width: 420px;
-  margin: 60px auto;
+  margin: auto;
   text-align: center;
   color: var(--text-muted);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 40px;
+}
+
+.empty-state__icon {
+  font-size: 32px;
+  margin-bottom: 12px;
 }
 
 .empty-state h2 {
@@ -475,7 +522,5 @@ textarea:focus-visible {
     width: auto;
     min-width: 0;
     height: 320px;
-    border-left: none;
-    border-top: 1px solid var(--border);
   }
 }
