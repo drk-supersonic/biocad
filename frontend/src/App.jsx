@@ -81,11 +81,12 @@ export default function App() {
         <div className="api-key-field">
           <input
             className="input"
-            type="password"
+            type="text"
             placeholder="Ключ OpenRouter (для чата)"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             autoComplete="off"
+            spellCheck={false}
           />
           <span className={`api-key-field__status ${apiKey.trim() ? "api-key-field__status--ok" : ""}`} />
         </div>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Gantt, ViewMode } from "gantt-task-react";
 
 /**
@@ -27,7 +28,37 @@ function toGanttTasks(tasks) {
     }));
 }
 
+// Библиотека сама локализует названия дней недели и месяцев в шапке
+// диаграммы через стандартный Intl (см. проп locale ниже), но заголовки
+// левой таблицы ("Name" / "From" / "To") у неё захардкожены на английском
+// и локалью не управляются — задаём их отдельным компонентом.
+function TaskListHeader({ headerHeight, rowWidth, fontFamily, fontSize }) {
+  return (
+    <div
+      className="gantt-list-header"
+      style={{ fontFamily, fontSize, height: headerHeight - 2 }}
+    >
+      <div className="gantt-list-header__cell" style={{ minWidth: rowWidth }}>
+        Задача
+      </div>
+      <div className="gantt-list-header__cell" style={{ minWidth: rowWidth }}>
+        Начало
+      </div>
+      <div className="gantt-list-header__cell" style={{ minWidth: rowWidth }}>
+        Окончание
+      </div>
+    </div>
+  );
+}
+
+const VIEW_MODES = [
+  { mode: ViewMode.Day, label: "День" },
+  { mode: ViewMode.Week, label: "Неделя" },
+  { mode: ViewMode.Month, label: "Месяц" },
+];
+
 export default function GanttChart({ tasks, onSelectTask }) {
+  const [viewMode, setViewMode] = useState(ViewMode.Day);
   const ganttTasks = toGanttTasks(tasks);
 
   if (ganttTasks.length === 0) {
@@ -40,9 +71,23 @@ export default function GanttChart({ tasks, onSelectTask }) {
 
   return (
     <div className="gantt-card">
+      <div className="gantt-card__toolbar">
+        {VIEW_MODES.map(({ mode, label }) => (
+          <button
+            key={mode}
+            type="button"
+            className={`gantt-view-btn ${viewMode === mode ? "gantt-view-btn--active" : ""}`}
+            onClick={() => setViewMode(mode)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       <Gantt
         tasks={ganttTasks}
-        viewMode={ViewMode.Day}
+        viewMode={viewMode}
+        locale="ru"
+        TaskListHeader={TaskListHeader}
         onClick={(task) => onSelectTask(task.id)}
         onDoubleClick={(task) => onSelectTask(task.id)}
       />
