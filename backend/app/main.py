@@ -1,34 +1,33 @@
 from __future__ import annotations
 
 import os
-import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+from mcp import ClientSession
+from mcp.shared.memory import create_connected_server_and_client_session
 
 from .excel_io import build_excel, parse_excel
 from .llm_client import run_chat_turn
+from .mcp_server import mcp as mcp_app
 from .models import ChatRequest, ChatResponse, Task
 
-# Параметры запуска MCP-сервера как отдельного процесса (stdio transport).
-_SERVER_PARAMS = StdioServerParameters(
-    command=sys.executable,
-    args=["-m", "app.mcp_server"],
-    cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-)
+# MCP-сервер (app/mcp_server.py) раньше запускался отдельным процессом и
+# общался с бэкендом через stdio — на каждый вызов инструмента (в том числе
+# на простые list_tasks для GET /api/tasks) уходил IPC-раунд-трип в другой
+# процесс. Здесь используется in-memory transport из самого mcp-sdk: та же
+# ClientSession и тот же протокол (list_tools/call_tool по JSON-RPC), но
+# сервер и клиент работают в одном процессе поверх memory-стримов — без
+# спавна процесса и сериализации через stdio.
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with stdio_client(_SERVER_PARAMS) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            app.state.mcp_session = session
-            yield
+    async with create_connected_server_and_client_session(mcp_app) as session:
+        app.state.mcp_session = session
+        yield
 
 
 app = FastAPI(title="Gantt AI Planner API", lifespan=lifespan)

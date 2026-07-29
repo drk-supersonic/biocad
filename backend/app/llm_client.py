@@ -59,6 +59,12 @@ def _mcp_tools_to_openai_format(mcp_tools: list) -> list[dict]:
     return result
 
 
+# Набор инструментов статичен на всё время жизни процесса (один mcp_server,
+# один набор @mcp.tool()), поэтому схему достаточно спросить у сервера один
+# раз и переиспользовать — вместо запроса list_tools() на каждый ход чата.
+_tools_cache: list[dict] | None = None
+
+
 async def _call_openrouter(messages: list[dict], tools: list[dict], api_key: str) -> dict:
     if not api_key or not api_key.strip():
         raise RuntimeError("Не передан ключ OpenRouter. Введи его в поле на странице.")
@@ -84,8 +90,11 @@ async def run_chat_turn(
     api_key: str,
 ) -> str:
     """Прогоняет один ход чата: пользователь -> (LLM + MCP tool loop) -> текстовый ответ."""
-    mcp_tools_resp = await session.list_tools()
-    tools = _mcp_tools_to_openai_format(mcp_tools_resp.tools)
+    global _tools_cache
+    if _tools_cache is None:
+        mcp_tools_resp = await session.list_tools()
+        _tools_cache = _mcp_tools_to_openai_format(mcp_tools_resp.tools)
+    tools = _tools_cache
 
     messages: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(history)
