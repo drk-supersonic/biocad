@@ -34,7 +34,7 @@ function toGanttTasks(tasks) {
 // колонки можно делать разной ширины без последствий для позиционирования
 // самой диаграммы справа.
 const NAME_COL_WIDTH = 172;
-const DATE_COL_WIDTH = 122;
+const DATE_COL_WIDTH = 148;
 
 function formatShortDate(date) {
   // month: "short" в ru-локали сам даёт "11 авг. 2026 г." — короче, чем
@@ -56,7 +56,7 @@ function TaskListHeader({ headerHeight, fontFamily, fontSize }) {
   return (
     <div
       className="gantt-list-header"
-      style={{ fontFamily, fontSize, height: headerHeight - 2 }}
+      style={{ fontFamily, fontSize, height: headerHeight }}
     >
       <div className="gantt-list-header__cell" style={{ width: NAME_COL_WIDTH }}>
         Задача

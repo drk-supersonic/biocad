@@ -300,7 +300,6 @@ textarea:focus-visible {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-right: 1px solid var(--border);
 }
 
 .gantt-list-table {
@@ -323,7 +322,6 @@ textarea:focus-visible {
   padding: 0 14px;
   font-size: 13px;
   color: var(--text);
-  border-right: 1px solid var(--border);
 }
 
 .gantt-list-cell--name {
@@ -342,8 +340,6 @@ textarea:focus-visible {
   color: var(--text-muted);
   font-size: 12.5px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* ─── Chat panel ──────────────────────────────────────────── */
