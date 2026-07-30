@@ -9,6 +9,7 @@ import { sendChatMessage } from "../api.js";
  * что мы возвращаем строки, а не dangerouslySetInnerHTML), так что теги
  * внутри пользовательского/модельного текста не интерпретируются как HTML.
  */
+ 
 function renderMarkdownLite(text) {
   const lines = text.split("\n");
   const blocks = [];
