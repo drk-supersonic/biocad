@@ -18,13 +18,19 @@ services:
     name: gantt-frontend
     runtime: static
     rootDir: frontend
-    # npm ci (а не npm install) — всегда переустанавливает node_modules с нуля
-    # по package-lock.json. Render кэширует node_modules между деплоями, и с
-    # npm install пакет gantt-task-react (версия в package.json не менялась)
-    # не переустанавливался, а patch-package пытался наложить новый патч на
-    # уже пропатченные старой версией файлы — и падал с ошибкой.
+    # Render для Node.js сам, отдельным шагом, ДО buildCommand гоняет свой
+    # неявный "npm install" с кэшем node_modules между деплоями
+    # (NODE_MODULES_CACHE=true по умолчанию). Именно на этом шаге падал
+    # patch-package — он накладывал новый патч поверх старого закэшированного
+    # node_modules, ещё до того как доходило до нашего buildCommand.
+    # SKIP_INSTALL_DEPS=true отключает этот неявный шаг Render целиком —
+    # установку зависимостей полностью делает наш buildCommand (npm ci
+    # каждый раз переустанавливает всё с нуля по lock-файлу, гарантированно
+    # без остатков старого патча).
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         value: https://gantt-backend-zaw6.onrender.com
+      - key: SKIP_INSTALL_DEPS
+        value: "true"
