@@ -33,8 +33,8 @@ function toGanttTasks(tasks) {
 // после рендера (см. offsetWidth в исходниках gantt-task-react), так что
 // колонки можно делать разной ширины без последствий для позиционирования
 // самой диаграммы справа.
-const NAME_COL_WIDTH = 172;
-const DATE_COL_WIDTH = 148;
+const NAME_COL_WIDTH = 160;
+const DATE_COL_WIDTH = 136;
 
 function formatShortDate(date) {
   // month: "short" в ru-локали сам даёт "11 авг. 2026 г." — короче, чем

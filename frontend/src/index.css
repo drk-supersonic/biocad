@@ -292,7 +292,7 @@ textarea:focus-visible {
 
 .gantt-list-header__cell {
   flex-shrink: 0;
-  padding: 0 14px;
+  padding: 0 8px;
   font-weight: 700;
   font-size: 12.5px;
   letter-spacing: 0.02em;
@@ -319,13 +319,9 @@ textarea:focus-visible {
 .gantt-list-cell {
   flex-shrink: 0;
   min-width: 0;
-  padding: 0 14px;
+  padding: 0 8px;
   font-size: 13px;
   color: var(--text);
-}
-
-.gantt-list-cell--name {
-  padding-right: 20px; /* гарантированный зазор перед следующей колонкой */
 }
 
 .gantt-list-cell__truncate {
