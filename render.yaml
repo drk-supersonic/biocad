@@ -18,7 +18,12 @@ services:
     name: gantt-frontend
     runtime: static
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    # npm ci (а не npm install) — всегда переустанавливает node_modules с нуля
+    # по package-lock.json. Render кэширует node_modules между деплоями, и с
+    # npm install пакет gantt-task-react (версия в package.json не менялась)
+    # не переустанавливался, а patch-package пытался наложить новый патч на
+    # уже пропатченные старой версией файлы — и падал с ошибкой.
+    buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
