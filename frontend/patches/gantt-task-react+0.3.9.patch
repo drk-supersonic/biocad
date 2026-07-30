@@ -1,0 +1,126 @@
+diff --git a/node_modules/gantt-task-react/dist/index.js b/node_modules/gantt-task-react/dist/index.js
+index 626bb39..f43a35c 100644
+--- a/node_modules/gantt-task-react/dist/index.js
++++ b/node_modules/gantt-task-react/dist/index.js
+@@ -762,7 +762,10 @@ var Calendar = function Calendar(_ref) {
+ 
+     for (var i = 0; i < dateSetup.dates.length; i++) {
+       var date = dateSetup.dates[i];
+-      var bottomValue = getLocaleMonth(date, locale);
++      var bottomValue = getCachedDateTimeFormat(locale, {
++        month: "short"
++      }).format(date);
++      bottomValue = bottomValue.replace(bottomValue[0], bottomValue[0].toLocaleUpperCase());
+       bottomValues.push(React__default.createElement("text", {
+         key: bottomValue + date.getFullYear(),
+         y: headerHeight * 0.8,
+@@ -810,7 +813,7 @@ var Calendar = function Calendar(_ref) {
+         topValue = getLocaleMonth(date, locale) + ", " + date.getFullYear();
+       }
+ 
+-      var bottomValue = "W" + getWeekNumberISO8601(date);
++      var bottomValue = "Нед. " + getWeekNumberISO8601(date);
+       bottomValues.push(React__default.createElement("text", {
+         key: date.getTime(),
+         y: headerHeight * 0.8,
+@@ -995,6 +998,28 @@ var Calendar = function Calendar(_ref) {
+       bottomValues = _getCalendarValuesFor6[1];
+   }
+ 
++  var dayDividers = dateSetup.dates.map(function (d, i) {
++    return React__default.createElement("line", {
++      key: "day-divider-" + i,
++      x1: columnWidth * i,
++      y1: 0,
++      x2: columnWidth * i,
++      y2: headerHeight,
++      style: {
++        stroke: "var(--border)"
++      }
++    });
++  });
++  var monthDayDivider = React__default.createElement("line", {
++    key: "month-day-divider",
++    x1: 0,
++    y1: headerHeight * 0.5,
++    x2: columnWidth * dateSetup.dates.length,
++    y2: headerHeight * 0.5,
++    style: {
++      stroke: "var(--border)"
++    }
++  });
+   return React__default.createElement("g", {
+     className: "calendar",
+     fontSize: fontSize,
+@@ -1005,7 +1030,7 @@ var Calendar = function Calendar(_ref) {
+     width: columnWidth * dateSetup.dates.length,
+     height: headerHeight,
+     className: styles$5.calendarHeader
+-  }), bottomValues, " ", topValues);
++  }), dayDividers, monthDayDivider, bottomValues, " ", topValues);
+ };
+ 
+ // A type of promise-like that resolves synchronously and supports only one observer
+diff --git a/node_modules/gantt-task-react/dist/index.modern.js b/node_modules/gantt-task-react/dist/index.modern.js
+index b372269..42d5582 100644
+--- a/node_modules/gantt-task-react/dist/index.modern.js
++++ b/node_modules/gantt-task-react/dist/index.modern.js
+@@ -761,7 +761,10 @@ var Calendar = function Calendar(_ref) {
+ 
+     for (var i = 0; i < dateSetup.dates.length; i++) {
+       var date = dateSetup.dates[i];
+-      var bottomValue = getLocaleMonth(date, locale);
++      var bottomValue = getCachedDateTimeFormat(locale, {
++        month: "short"
++      }).format(date);
++      bottomValue = bottomValue.replace(bottomValue[0], bottomValue[0].toLocaleUpperCase());
+       bottomValues.push(React.createElement("text", {
+         key: bottomValue + date.getFullYear(),
+         y: headerHeight * 0.8,
+@@ -809,7 +812,7 @@ var Calendar = function Calendar(_ref) {
+         topValue = getLocaleMonth(date, locale) + ", " + date.getFullYear();
+       }
+ 
+-      var bottomValue = "W" + getWeekNumberISO8601(date);
++      var bottomValue = "Нед. " + getWeekNumberISO8601(date);
+       bottomValues.push(React.createElement("text", {
+         key: date.getTime(),
+         y: headerHeight * 0.8,
+@@ -994,6 +997,28 @@ var Calendar = function Calendar(_ref) {
+       bottomValues = _getCalendarValuesFor6[1];
+   }
+ 
++  var dayDividers = dateSetup.dates.map(function (d, i) {
++    return React.createElement("line", {
++      key: "day-divider-" + i,
++      x1: columnWidth * i,
++      y1: 0,
++      x2: columnWidth * i,
++      y2: headerHeight,
++      style: {
++        stroke: "var(--border)"
++      }
++    });
++  });
++  var monthDayDivider = React.createElement("line", {
++    key: "month-day-divider",
++    x1: 0,
++    y1: headerHeight * 0.5,
++    x2: columnWidth * dateSetup.dates.length,
++    y2: headerHeight * 0.5,
++    style: {
++      stroke: "var(--border)"
++    }
++  });
+   return React.createElement("g", {
+     className: "calendar",
+     fontSize: fontSize,
+@@ -1004,7 +1029,7 @@ var Calendar = function Calendar(_ref) {
+     width: columnWidth * dateSetup.dates.length,
+     height: headerHeight,
+     className: styles$5.calendarHeader
+-  }), bottomValues, " ", topValues);
++  }), dayDividers, monthDayDivider, bottomValues, " ", topValues);
+ };
+ 
+ // A type of promise-like that resolves synchronously and supports only one observer
