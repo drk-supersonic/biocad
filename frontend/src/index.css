@@ -18,7 +18,6 @@
   --radius-sm: 10px;
   --font-body: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SFMono-Regular", ui-monospace, "Menlo", monospace;
-  
 }
 
 * {
@@ -459,7 +458,7 @@ textarea:focus-visible {
   align-items: flex-end;
   gap: 8px;
   padding: 6px 6px 6px 10px;
-  border: 1px solid var(--border);
+  border: none;
   background: var(--surface);
 }
 
@@ -475,6 +474,14 @@ textarea:focus-visible {
   padding: 4px 0;
   max-height: 160px;
   color: var(--text);
+  /* Прокрутка остаётся рабочей (текст растёт до 160px, дальше скроллится),
+     просто сам скроллбар визуально скрыт. */
+  scrollbar-width: none;
+}
+
+.chat-input-box__textarea::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .chat-input-box__textarea::placeholder {
