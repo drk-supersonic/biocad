@@ -137,6 +137,7 @@ export default function GanttChart({ tasks, onSelectTask }) {
         viewMode={viewMode}
         locale="ru"
         listCellWidth={`${NAME_COL_WIDTH}px`}
+        headerHeight={62}
         TaskListHeader={TaskListHeader}
         TaskListTable={TaskListTable}
         todayColor="rgba(109, 94, 244, 0.08)"
