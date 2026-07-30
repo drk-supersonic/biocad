@@ -98,13 +98,7 @@ function SendIcon() {
 }
 
 export default function ChatPanel({ apiKey, onTasksUpdated }) {
-  const [messages, setMessages] = useState([
-    {
-      role: "system",
-      content:
-        "Опиши, что изменить в плане: перенести задачу, поменять зависимости, добавить задачу, сменить исполнителя.",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const scrollRef = useRef(null);
