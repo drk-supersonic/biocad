@@ -302,6 +302,10 @@ textarea:focus-visible {
   text-overflow: ellipsis;
 }
 
+.gantt-list-header__cell--date {
+  padding: 0 4px;
+}
+
 .gantt-list-table {
   border-bottom: 1px solid var(--border);
 }
@@ -309,7 +313,6 @@ textarea:focus-visible {
 .gantt-list-row {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--border);
 }
 
 .gantt-list-row:nth-child(even) {
@@ -336,6 +339,7 @@ textarea:focus-visible {
   color: var(--text-muted);
   font-size: 12.5px;
   white-space: nowrap;
+  padding: 0 4px;
 }
 
 /* ─── Chat panel ──────────────────────────────────────────── */
