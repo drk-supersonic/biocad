@@ -53,7 +53,7 @@ export default function App() {
     <div className="app">
       <header className="toolbar">
         <div className="toolbar__title">
-          Gantt <span>AI</span> Planner
+          Гант <span>ИИ</span> Планировщик
         </div>
 
         <div className="toolbar__group">

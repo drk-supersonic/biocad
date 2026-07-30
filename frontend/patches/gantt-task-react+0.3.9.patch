@@ -1,17 +1,46 @@
+diff --git a/node_modules/gantt-task-react/dist/index.css b/node_modules/gantt-task-react/dist/index.css
+index ff26a91..face962 100644
+--- a/node_modules/gantt-task-react/dist/index.css
++++ b/node_modules/gantt-task-react/dist/index.css
+@@ -154,12 +154,14 @@
+ }
+ 
+ ._1rLuZ {
+-  stroke: #e6e4e4;
++  stroke: #c9c9c9;
++  stroke-width: 1.2;
+ }
+ 
+ ._2q1Kt {
+   text-anchor: middle;
+-  fill: #555;
++  fill: #2b2b2b;
++  font-weight: 600;
+   -webkit-touch-callout: none;
+   -webkit-user-select: none;
+   -moz-user-select: none;
 diff --git a/node_modules/gantt-task-react/dist/index.js b/node_modules/gantt-task-react/dist/index.js
-index 626bb39..cbbaccf 100644
+index 626bb39..7f20f9d 100644
 --- a/node_modules/gantt-task-react/dist/index.js
 +++ b/node_modules/gantt-task-react/dist/index.js
-@@ -747,7 +747,7 @@ var Calendar = function Calendar(_ref) {
+@@ -701,6 +701,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
+     key: value + "text",
+     y: yText,
+     x: xText,
++    dominantBaseline: "central",
+     className: styles$5.calendarTopText
+   }, value));
+ };
+@@ -747,7 +748,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: headerHeight,
            xText: xText,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -762,7 +762,10 @@ var Calendar = function Calendar(_ref) {
+@@ -762,7 +763,10 @@ var Calendar = function Calendar(_ref) {
  
      for (var i = 0; i < dateSetup.dates.length; i++) {
        var date = dateSetup.dates[i];
@@ -23,16 +52,19 @@ index 626bb39..cbbaccf 100644
        bottomValues.push(React__default.createElement("text", {
          key: bottomValue + date.getFullYear(),
          y: headerHeight * 0.8,
-@@ -787,7 +790,7 @@ var Calendar = function Calendar(_ref) {
+@@ -785,9 +789,9 @@ var Calendar = function Calendar(_ref) {
+           value: topValue,
+           x1Line: columnWidth * i,
            y1Line: 0,
-           y2Line: topDefaultHeight,
+-          y2Line: topDefaultHeight,
++          y2Line: headerHeight,
            xText: xText,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -810,13 +813,24 @@ var Calendar = function Calendar(_ref) {
+@@ -810,13 +814,24 @@ var Calendar = function Calendar(_ref) {
          topValue = getLocaleMonth(date, locale) + ", " + date.getFullYear();
        }
  
@@ -52,50 +84,57 @@ index 626bb39..cbbaccf 100644
        bottomValues.push(React__default.createElement("text", {
          key: date.getTime(),
          y: headerHeight * 0.8,
-         x: columnWidth * (i + +rtl),
+-        x: columnWidth * (i + +rtl),
++        x: columnWidth * i + columnWidth * 0.5,
          className: styles$5.calendarBottomText
 -      }, bottomValue));
 +      }, bottomValue, React__default.createElement("title", null, bottomValueFull)));
  
        if (topValue) {
          if (i !== dates.length - 1) {
-@@ -827,7 +841,7 @@ var Calendar = function Calendar(_ref) {
+@@ -825,9 +840,9 @@ var Calendar = function Calendar(_ref) {
+             value: topValue,
+             x1Line: columnWidth * i + weeksCount * columnWidth,
              y1Line: 0,
-             y2Line: topDefaultHeight,
+-            y2Line: topDefaultHeight,
++            y2Line: headerHeight,
              xText: columnWidth * i + columnWidth * weeksCount * 0.5,
 -            yText: topDefaultHeight * 0.9
-+            yText: topDefaultHeight * 0.62
++            yText: topDefaultHeight / 2
            }));
          }
  
-@@ -865,7 +879,7 @@ var Calendar = function Calendar(_ref) {
+@@ -863,9 +878,9 @@ var Calendar = function Calendar(_ref) {
+           value: topValue,
+           x1Line: columnWidth * (i + 1),
            y1Line: 0,
-           y2Line: topDefaultHeight,
+-          y2Line: topDefaultHeight,
++          y2Line: headerHeight,
            xText: columnWidth * (i + 1) - getDaysInMonth(date.getMonth(), date.getFullYear()) * columnWidth * 0.5,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -902,7 +916,7 @@ var Calendar = function Calendar(_ref) {
+@@ -902,7 +917,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: topDefaultHeight,
            xText: columnWidth * i + ticks * columnWidth * 0.5,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -940,7 +954,7 @@ var Calendar = function Calendar(_ref) {
+@@ -940,7 +955,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: topDefaultHeight,
            xText: columnWidth * (i + topPosition),
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -995,6 +1009,28 @@ var Calendar = function Calendar(_ref) {
+@@ -995,6 +1010,28 @@ var Calendar = function Calendar(_ref) {
        bottomValues = _getCalendarValuesFor6[1];
    }
  
@@ -124,7 +163,7 @@ index 626bb39..cbbaccf 100644
    return React__default.createElement("g", {
      className: "calendar",
      fontSize: fontSize,
-@@ -1005,7 +1041,7 @@ var Calendar = function Calendar(_ref) {
+@@ -1005,7 +1042,7 @@ var Calendar = function Calendar(_ref) {
      width: columnWidth * dateSetup.dates.length,
      height: headerHeight,
      className: styles$5.calendarHeader
@@ -134,19 +173,27 @@ index 626bb39..cbbaccf 100644
  
  // A type of promise-like that resolves synchronously and supports only one observer
 diff --git a/node_modules/gantt-task-react/dist/index.modern.js b/node_modules/gantt-task-react/dist/index.modern.js
-index b372269..3862b97 100644
+index b372269..c2711bd 100644
 --- a/node_modules/gantt-task-react/dist/index.modern.js
 +++ b/node_modules/gantt-task-react/dist/index.modern.js
-@@ -746,7 +746,7 @@ var Calendar = function Calendar(_ref) {
+@@ -700,6 +700,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
+     key: value + "text",
+     y: yText,
+     x: xText,
++    dominantBaseline: "central",
+     className: styles$5.calendarTopText
+   }, value));
+ };
+@@ -746,7 +747,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: headerHeight,
            xText: xText,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -761,7 +761,10 @@ var Calendar = function Calendar(_ref) {
+@@ -761,7 +762,10 @@ var Calendar = function Calendar(_ref) {
  
      for (var i = 0; i < dateSetup.dates.length; i++) {
        var date = dateSetup.dates[i];
@@ -158,16 +205,19 @@ index b372269..3862b97 100644
        bottomValues.push(React.createElement("text", {
          key: bottomValue + date.getFullYear(),
          y: headerHeight * 0.8,
-@@ -786,7 +789,7 @@ var Calendar = function Calendar(_ref) {
+@@ -784,9 +788,9 @@ var Calendar = function Calendar(_ref) {
+           value: topValue,
+           x1Line: columnWidth * i,
            y1Line: 0,
-           y2Line: topDefaultHeight,
+-          y2Line: topDefaultHeight,
++          y2Line: headerHeight,
            xText: xText,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -809,13 +812,24 @@ var Calendar = function Calendar(_ref) {
+@@ -809,13 +813,24 @@ var Calendar = function Calendar(_ref) {
          topValue = getLocaleMonth(date, locale) + ", " + date.getFullYear();
        }
  
@@ -187,50 +237,57 @@ index b372269..3862b97 100644
        bottomValues.push(React.createElement("text", {
          key: date.getTime(),
          y: headerHeight * 0.8,
-         x: columnWidth * (i + +rtl),
+-        x: columnWidth * (i + +rtl),
++        x: columnWidth * i + columnWidth * 0.5,
          className: styles$5.calendarBottomText
 -      }, bottomValue));
 +      }, bottomValue, React.createElement("title", null, bottomValueFull)));
  
        if (topValue) {
          if (i !== dates.length - 1) {
-@@ -826,7 +840,7 @@ var Calendar = function Calendar(_ref) {
+@@ -824,9 +839,9 @@ var Calendar = function Calendar(_ref) {
+             value: topValue,
+             x1Line: columnWidth * i + weeksCount * columnWidth,
              y1Line: 0,
-             y2Line: topDefaultHeight,
+-            y2Line: topDefaultHeight,
++            y2Line: headerHeight,
              xText: columnWidth * i + columnWidth * weeksCount * 0.5,
 -            yText: topDefaultHeight * 0.9
-+            yText: topDefaultHeight * 0.62
++            yText: topDefaultHeight / 2
            }));
          }
  
-@@ -864,7 +878,7 @@ var Calendar = function Calendar(_ref) {
+@@ -862,9 +877,9 @@ var Calendar = function Calendar(_ref) {
+           value: topValue,
+           x1Line: columnWidth * (i + 1),
            y1Line: 0,
-           y2Line: topDefaultHeight,
+-          y2Line: topDefaultHeight,
++          y2Line: headerHeight,
            xText: columnWidth * (i + 1) - getDaysInMonth(date.getMonth(), date.getFullYear()) * columnWidth * 0.5,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -901,7 +915,7 @@ var Calendar = function Calendar(_ref) {
+@@ -901,7 +916,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: topDefaultHeight,
            xText: columnWidth * i + ticks * columnWidth * 0.5,
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -939,7 +953,7 @@ var Calendar = function Calendar(_ref) {
+@@ -939,7 +954,7 @@ var Calendar = function Calendar(_ref) {
            y1Line: 0,
            y2Line: topDefaultHeight,
            xText: columnWidth * (i + topPosition),
 -          yText: topDefaultHeight * 0.9
-+          yText: topDefaultHeight * 0.62
++          yText: topDefaultHeight / 2
          }));
        }
      }
-@@ -994,6 +1008,28 @@ var Calendar = function Calendar(_ref) {
+@@ -994,6 +1009,28 @@ var Calendar = function Calendar(_ref) {
        bottomValues = _getCalendarValuesFor6[1];
    }
  
@@ -259,7 +316,7 @@ index b372269..3862b97 100644
    return React.createElement("g", {
      className: "calendar",
      fontSize: fontSize,
-@@ -1004,7 +1040,7 @@ var Calendar = function Calendar(_ref) {
+@@ -1004,7 +1041,7 @@ var Calendar = function Calendar(_ref) {
      width: columnWidth * dateSetup.dates.length,
      height: headerHeight,
      className: styles$5.calendarHeader
