@@ -20,7 +20,7 @@ index ff26a91..face962 100644
    -webkit-user-select: none;
    -moz-user-select: none;
 diff --git a/node_modules/gantt-task-react/dist/index.js b/node_modules/gantt-task-react/dist/index.js
-index 626bb39..a63187e 100644
+index 626bb39..bdce49b 100644
 --- a/node_modules/gantt-task-react/dist/index.js
 +++ b/node_modules/gantt-task-react/dist/index.js
 @@ -701,6 +701,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -172,7 +172,7 @@ index 626bb39..a63187e 100644
  };
  
  // A type of promise-like that resolves synchronously and supports only one observer
-@@ -1774,6 +1811,10 @@ var TaskItem = function TaskItem(props) {
+@@ -1774,6 +1811,12 @@ var TaskItem = function TaskItem(props) {
        isTextInside = _useState2[0],
        setIsTextInside = _useState2[1];
  
@@ -180,10 +180,12 @@ index 626bb39..a63187e 100644
 +      label = _useState3[0],
 +      setLabel = _useState3[1];
 +
++  var measuredForRef = React.useRef(null);
++
    React.useEffect(function () {
      switch (task.typeInternal) {
        case "milestone":
-@@ -1793,11 +1834,34 @@ var TaskItem = function TaskItem(props) {
+@@ -1793,11 +1836,43 @@ var TaskItem = function TaskItem(props) {
          break;
      }
    }, [task, isSelected]);
@@ -194,15 +196,24 @@ index 626bb39..a63187e 100644
 +      // Компонент переиспользуется между обновлениями (тот же task.id),
 +      // а bbox всегда меряет то, что СЕЙЧАС отрисовано в DOM — это может
 +      // быть усечённая строка с предыдущего рендера (другая ширина бара,
-+      // например после смены Дня/Недели/Месяца). Если сейчас отрисован не
-+      // полный task.name, сначала возвращаем его как есть и выходим — эффект
-+      // сработает повторно уже с полным текстом, и только тогда меряем.
-+      if (label !== task.name) {
-+        setLabel(task.name);
-+        return;
++      // например после смены Дня/Недели/Месяца). measuredForRef хранит,
++      // для какой именно пары (имя, ширина бара) мы уже честно замеряли —
++      // в отличие от сравнения label !== task.name, это не путает "усекли
++      // только что" с "остался старый label от прошлой геометрии", и не
++      // зацикливается: обычное сравнение label !== task.name всегда истинно
++      // сразу после усечения (в этом и есть смысл усечения), и если положить
++      // label в зависимости эффекта, это даёт бесконечный ререндер.
++      var barWidth = task.x2 - task.x1;
++      var measureKey = task.name + "|" + barWidth;
++
++      if (measuredForRef.current !== measureKey) {
++        measuredForRef.current = measureKey;
++        if (label !== task.name) {
++          setLabel(task.name);
++          return;
++        }
 +      }
 +
-+      var barWidth = task.x2 - task.x1;
 +      var innerWidth = barWidth - 16; // отступ по 8px с каждой стороны
 +      var bbox = textRef.current.getBBox();
 +
@@ -221,7 +232,7 @@ index 626bb39..a63187e 100644
  
    var getX = function getX() {
      var width = task.x2 - task.x1;
-@@ -1844,9 +1908,9 @@ var TaskItem = function TaskItem(props) {
+@@ -1844,9 +1919,9 @@ var TaskItem = function TaskItem(props) {
    }, taskItem, React__default.createElement("text", {
      x: getX(),
      y: task.y + taskHeight * 0.5,
@@ -234,7 +245,7 @@ index 626bb39..a63187e 100644
  
  var TaskGanttContent = function TaskGanttContent(_ref) {
 diff --git a/node_modules/gantt-task-react/dist/index.modern.js b/node_modules/gantt-task-react/dist/index.modern.js
-index b372269..9f3109d 100644
+index b372269..2ca2adf 100644
 --- a/node_modules/gantt-task-react/dist/index.modern.js
 +++ b/node_modules/gantt-task-react/dist/index.modern.js
 @@ -700,6 +700,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -386,7 +397,7 @@ index b372269..9f3109d 100644
  };
  
  // A type of promise-like that resolves synchronously and supports only one observer
-@@ -1773,6 +1810,10 @@ var TaskItem = function TaskItem(props) {
+@@ -1773,6 +1810,12 @@ var TaskItem = function TaskItem(props) {
        isTextInside = _useState2[0],
        setIsTextInside = _useState2[1];
  
@@ -394,10 +405,12 @@ index b372269..9f3109d 100644
 +      label = _useState3[0],
 +      setLabel = _useState3[1];
 +
++  var measuredForRef = useRef(null);
++
    useEffect(function () {
      switch (task.typeInternal) {
        case "milestone":
-@@ -1792,11 +1833,34 @@ var TaskItem = function TaskItem(props) {
+@@ -1792,11 +1835,43 @@ var TaskItem = function TaskItem(props) {
          break;
      }
    }, [task, isSelected]);
@@ -408,15 +421,24 @@ index b372269..9f3109d 100644
 +      // Компонент переиспользуется между обновлениями (тот же task.id),
 +      // а bbox всегда меряет то, что СЕЙЧАС отрисовано в DOM — это может
 +      // быть усечённая строка с предыдущего рендера (другая ширина бара,
-+      // например после смены Дня/Недели/Месяца). Если сейчас отрисован не
-+      // полный task.name, сначала возвращаем его как есть и выходим — эффект
-+      // сработает повторно уже с полным текстом, и только тогда меряем.
-+      if (label !== task.name) {
-+        setLabel(task.name);
-+        return;
++      // например после смены Дня/Недели/Месяца). measuredForRef хранит,
++      // для какой именно пары (имя, ширина бара) мы уже честно замеряли —
++      // в отличие от сравнения label !== task.name, это не путает "усекли
++      // только что" с "остался старый label от прошлой геометрии", и не
++      // зацикливается: обычное сравнение label !== task.name всегда истинно
++      // сразу после усечения (в этом и есть смысл усечения), и если положить
++      // label в зависимости эффекта, это даёт бесконечный ререндер.
++      var barWidth = task.x2 - task.x1;
++      var measureKey = task.name + "|" + barWidth;
++
++      if (measuredForRef.current !== measureKey) {
++        measuredForRef.current = measureKey;
++        if (label !== task.name) {
++          setLabel(task.name);
++          return;
++        }
 +      }
 +
-+      var barWidth = task.x2 - task.x1;
 +      var innerWidth = barWidth - 16; // отступ по 8px с каждой стороны
 +      var bbox = textRef.current.getBBox();
 +
@@ -435,7 +457,7 @@ index b372269..9f3109d 100644
  
    var getX = function getX() {
      var width = task.x2 - task.x1;
-@@ -1843,9 +1907,9 @@ var TaskItem = function TaskItem(props) {
+@@ -1843,9 +1918,9 @@ var TaskItem = function TaskItem(props) {
    }, taskItem, React.createElement("text", {
      x: getX(),
      y: task.y + taskHeight * 0.5,
