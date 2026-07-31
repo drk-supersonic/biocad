@@ -20,7 +20,7 @@ index ff26a91..face962 100644
    -webkit-user-select: none;
    -moz-user-select: none;
 diff --git a/node_modules/gantt-task-react/dist/index.js b/node_modules/gantt-task-react/dist/index.js
-index 626bb39..4a0a6e7 100644
+index 626bb39..a63187e 100644
 --- a/node_modules/gantt-task-react/dist/index.js
 +++ b/node_modules/gantt-task-react/dist/index.js
 @@ -701,6 +701,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -183,7 +183,7 @@ index 626bb39..4a0a6e7 100644
    React.useEffect(function () {
      switch (task.typeInternal) {
        case "milestone":
-@@ -1793,9 +1834,22 @@ var TaskItem = function TaskItem(props) {
+@@ -1793,11 +1834,34 @@ var TaskItem = function TaskItem(props) {
          break;
      }
    }, [task, isSelected]);
@@ -191,13 +191,23 @@ index 626bb39..4a0a6e7 100644
 +  React.useLayoutEffect(function () {
      if (textRef.current) {
 -      setIsTextInside(textRef.current.getBBox().width < task.x2 - task.x1);
++      // Компонент переиспользуется между обновлениями (тот же task.id),
++      // а bbox всегда меряет то, что СЕЙЧАС отрисовано в DOM — это может
++      // быть усечённая строка с предыдущего рендера (другая ширина бара,
++      // например после смены Дня/Недели/Месяца). Если сейчас отрисован не
++      // полный task.name, сначала возвращаем его как есть и выходим — эффект
++      // сработает повторно уже с полным текстом, и только тогда меряем.
++      if (label !== task.name) {
++        setLabel(task.name);
++        return;
++      }
++
 +      var barWidth = task.x2 - task.x1;
-+      var innerWidth = barWidth - 10;
++      var innerWidth = barWidth - 16; // отступ по 8px с каждой стороны
 +      var bbox = textRef.current.getBBox();
 +
 +      if (bbox.width <= innerWidth || task.name.length <= 1) {
 +        setIsTextInside(true);
-+        setLabel(task.name);
 +      } else {
 +        var avgCharWidth = bbox.width / task.name.length;
 +        var maxChars = Math.max(1, Math.floor(innerWidth / avgCharWidth) - 1);
@@ -206,9 +216,12 @@ index 626bb39..4a0a6e7 100644
 +        setLabel(truncated);
 +      }
      }
-   }, [textRef, task]);
+-  }, [textRef, task]);
++  }, [textRef, task, label]);
  
-@@ -1844,9 +1898,9 @@ var TaskItem = function TaskItem(props) {
+   var getX = function getX() {
+     var width = task.x2 - task.x1;
+@@ -1844,9 +1908,9 @@ var TaskItem = function TaskItem(props) {
    }, taskItem, React__default.createElement("text", {
      x: getX(),
      y: task.y + taskHeight * 0.5,
@@ -221,7 +234,7 @@ index 626bb39..4a0a6e7 100644
  
  var TaskGanttContent = function TaskGanttContent(_ref) {
 diff --git a/node_modules/gantt-task-react/dist/index.modern.js b/node_modules/gantt-task-react/dist/index.modern.js
-index b372269..b625fcf 100644
+index b372269..9f3109d 100644
 --- a/node_modules/gantt-task-react/dist/index.modern.js
 +++ b/node_modules/gantt-task-react/dist/index.modern.js
 @@ -700,6 +700,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -384,7 +397,7 @@ index b372269..b625fcf 100644
    useEffect(function () {
      switch (task.typeInternal) {
        case "milestone":
-@@ -1792,9 +1833,22 @@ var TaskItem = function TaskItem(props) {
+@@ -1792,11 +1833,34 @@ var TaskItem = function TaskItem(props) {
          break;
      }
    }, [task, isSelected]);
@@ -392,13 +405,23 @@ index b372269..b625fcf 100644
 +  React.useLayoutEffect(function () {
      if (textRef.current) {
 -      setIsTextInside(textRef.current.getBBox().width < task.x2 - task.x1);
++      // Компонент переиспользуется между обновлениями (тот же task.id),
++      // а bbox всегда меряет то, что СЕЙЧАС отрисовано в DOM — это может
++      // быть усечённая строка с предыдущего рендера (другая ширина бара,
++      // например после смены Дня/Недели/Месяца). Если сейчас отрисован не
++      // полный task.name, сначала возвращаем его как есть и выходим — эффект
++      // сработает повторно уже с полным текстом, и только тогда меряем.
++      if (label !== task.name) {
++        setLabel(task.name);
++        return;
++      }
++
 +      var barWidth = task.x2 - task.x1;
-+      var innerWidth = barWidth - 10;
++      var innerWidth = barWidth - 16; // отступ по 8px с каждой стороны
 +      var bbox = textRef.current.getBBox();
 +
 +      if (bbox.width <= innerWidth || task.name.length <= 1) {
 +        setIsTextInside(true);
-+        setLabel(task.name);
 +      } else {
 +        var avgCharWidth = bbox.width / task.name.length;
 +        var maxChars = Math.max(1, Math.floor(innerWidth / avgCharWidth) - 1);
@@ -407,9 +430,12 @@ index b372269..b625fcf 100644
 +        setLabel(truncated);
 +      }
      }
-   }, [textRef, task]);
+-  }, [textRef, task]);
++  }, [textRef, task, label]);
  
-@@ -1843,9 +1897,9 @@ var TaskItem = function TaskItem(props) {
+   var getX = function getX() {
+     var width = task.x2 - task.x1;
+@@ -1843,9 +1907,9 @@ var TaskItem = function TaskItem(props) {
    }, taskItem, React.createElement("text", {
      x: getX(),
      y: task.y + taskHeight * 0.5,
