@@ -14,8 +14,8 @@
   --ok: #2fb380;
   --shadow-sm: 0 1px 2px rgba(30, 34, 48, 0.05), 0 1px 1px rgba(30, 34, 48, 0.03);
   --shadow-md: 0 8px 24px rgba(30, 34, 48, 0.08), 0 2px 6px rgba(30, 34, 48, 0.04);
-  --radius: 16px;
-  --radius-sm: 10px;
+  --radius: 6px;
+  --radius-sm: 3px;
   --font-body: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SFMono-Regular", ui-monospace, "Menlo", monospace;
 }
@@ -65,7 +65,6 @@ textarea:focus-visible {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
   flex-wrap: wrap;
 }
 
@@ -98,7 +97,7 @@ textarea:focus-visible {
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -273,7 +272,7 @@ textarea:focus-visible {
   padding: 6px 14px;
   font-size: 12.5px;
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface-sunken);
   color: var(--text-muted);
@@ -423,7 +422,6 @@ textarea:focus-visible {
   color: var(--accent-text);
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  border-bottom-right-radius: 4px;
   max-width: 88%;
   white-space: pre-wrap;
   word-break: break-word;
@@ -679,7 +677,7 @@ textarea:focus-visible {
 .badge {
   display: inline-block;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--accent-soft);
   color: var(--accent-hover);
   font-weight: 600;
