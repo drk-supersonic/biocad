@@ -20,7 +20,7 @@ index ff26a91..face962 100644
    -webkit-user-select: none;
    -moz-user-select: none;
 diff --git a/node_modules/gantt-task-react/dist/index.js b/node_modules/gantt-task-react/dist/index.js
-index 626bb39..7f20f9d 100644
+index 626bb39..4a0a6e7 100644
 --- a/node_modules/gantt-task-react/dist/index.js
 +++ b/node_modules/gantt-task-react/dist/index.js
 @@ -701,6 +701,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -172,8 +172,56 @@ index 626bb39..7f20f9d 100644
  };
  
  // A type of promise-like that resolves synchronously and supports only one observer
+@@ -1774,6 +1811,10 @@ var TaskItem = function TaskItem(props) {
+       isTextInside = _useState2[0],
+       setIsTextInside = _useState2[1];
+ 
++  var _useState3 = React.useState(task.name),
++      label = _useState3[0],
++      setLabel = _useState3[1];
++
+   React.useEffect(function () {
+     switch (task.typeInternal) {
+       case "milestone":
+@@ -1793,9 +1834,22 @@ var TaskItem = function TaskItem(props) {
+         break;
+     }
+   }, [task, isSelected]);
+-  React.useEffect(function () {
++  React.useLayoutEffect(function () {
+     if (textRef.current) {
+-      setIsTextInside(textRef.current.getBBox().width < task.x2 - task.x1);
++      var barWidth = task.x2 - task.x1;
++      var innerWidth = barWidth - 10;
++      var bbox = textRef.current.getBBox();
++
++      if (bbox.width <= innerWidth || task.name.length <= 1) {
++        setIsTextInside(true);
++        setLabel(task.name);
++      } else {
++        var avgCharWidth = bbox.width / task.name.length;
++        var maxChars = Math.max(1, Math.floor(innerWidth / avgCharWidth) - 1);
++        var truncated = task.name.length > maxChars ? task.name.slice(0, maxChars) + "\u2026" : task.name;
++        setIsTextInside(true);
++        setLabel(truncated);
++      }
+     }
+   }, [textRef, task]);
+ 
+@@ -1844,9 +1898,9 @@ var TaskItem = function TaskItem(props) {
+   }, taskItem, React__default.createElement("text", {
+     x: getX(),
+     y: task.y + taskHeight * 0.5,
+-    className: isTextInside ? style.barLabel :  style.barLabelOutside,
++    className: style.barLabel,
+     ref: textRef
+-  }, task.name));
++  }, label, React__default.createElement("title", null, task.name)));
+ };
+ 
+ var TaskGanttContent = function TaskGanttContent(_ref) {
 diff --git a/node_modules/gantt-task-react/dist/index.modern.js b/node_modules/gantt-task-react/dist/index.modern.js
-index b372269..c2711bd 100644
+index b372269..b625fcf 100644
 --- a/node_modules/gantt-task-react/dist/index.modern.js
 +++ b/node_modules/gantt-task-react/dist/index.modern.js
 @@ -700,6 +700,7 @@ var TopPartOfCalendar = function TopPartOfCalendar(_ref) {
@@ -325,3 +373,51 @@ index b372269..c2711bd 100644
  };
  
  // A type of promise-like that resolves synchronously and supports only one observer
+@@ -1773,6 +1810,10 @@ var TaskItem = function TaskItem(props) {
+       isTextInside = _useState2[0],
+       setIsTextInside = _useState2[1];
+ 
++  var _useState3 = useState(task.name),
++      label = _useState3[0],
++      setLabel = _useState3[1];
++
+   useEffect(function () {
+     switch (task.typeInternal) {
+       case "milestone":
+@@ -1792,9 +1833,22 @@ var TaskItem = function TaskItem(props) {
+         break;
+     }
+   }, [task, isSelected]);
+-  useEffect(function () {
++  React.useLayoutEffect(function () {
+     if (textRef.current) {
+-      setIsTextInside(textRef.current.getBBox().width < task.x2 - task.x1);
++      var barWidth = task.x2 - task.x1;
++      var innerWidth = barWidth - 10;
++      var bbox = textRef.current.getBBox();
++
++      if (bbox.width <= innerWidth || task.name.length <= 1) {
++        setIsTextInside(true);
++        setLabel(task.name);
++      } else {
++        var avgCharWidth = bbox.width / task.name.length;
++        var maxChars = Math.max(1, Math.floor(innerWidth / avgCharWidth) - 1);
++        var truncated = task.name.length > maxChars ? task.name.slice(0, maxChars) + "\u2026" : task.name;
++        setIsTextInside(true);
++        setLabel(truncated);
++      }
+     }
+   }, [textRef, task]);
+ 
+@@ -1843,9 +1897,9 @@ var TaskItem = function TaskItem(props) {
+   }, taskItem, React.createElement("text", {
+     x: getX(),
+     y: task.y + taskHeight * 0.5,
+-    className: isTextInside ? style.barLabel :  style.barLabelOutside,
++    className: style.barLabel,
+     ref: textRef
+-  }, task.name));
++  }, label, React.createElement("title", null, task.name)));
+ };
+ 
+ var TaskGanttContent = function TaskGanttContent(_ref) {

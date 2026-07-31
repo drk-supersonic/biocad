@@ -378,6 +378,43 @@ textarea:focus-visible {
   padding: 0 4px;
 }
 
+/* Свой тултип вместо дефолтного (StandardTooltipContent) — тот рендерил
+   английский текст, дату вида "2-8-2026" и уродливую жёсткую тень без
+   скругления. Внешний позиционирующий div (не наш, от библиотеки) фона и
+   теней не задаёт — весь вид полностью наш. */
+.gantt-tooltip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 10px 14px;
+  max-width: 260px;
+}
+
+.gantt-tooltip__title {
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.gantt-tooltip__dates,
+.gantt-tooltip__duration {
+  color: var(--text-muted);
+  font-size: 0.9em;
+}
+
+.gantt-tooltip__duration {
+  margin-top: 2px;
+}
+
+/* Подпись задачи прямо на баре диаграммы: библиотека обрезает её
+   многоточием через наш патч (patches/gantt-task-react+0.3.9.patch),
+   здесь только внешний вид текста. */
+._3zRJQ {
+  fill: #ffffff !important;
+  font-weight: 500;
+}
+
 /* ─── Chat panel ──────────────────────────────────────────── */
 
 .chat-panel {

@@ -34,18 +34,54 @@ function toGanttTasks(tasks) {
 // колонки можно делать разной ширины без последствий для позиционирования
 // самой диаграммы справа.
 const NAME_COL_WIDTH = 160;
-const DATE_COL_WIDTH = 128;
+const PERIOD_COL_WIDTH = 176;
 
-function formatShortDate(date) {
-  // month: "short" в ru-локали сам даёт "11 авг. 2026 г." — короче, чем
-  // дефолтный "long" у библиотеки ("11 августа 2026 г."), и освобождает
-  // место под саму диаграмму.
-  return date.toLocaleDateString("ru", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+// Полная "вт, 18 авг. 2026 г. - чт, 20 авг. 2026 г." с днём недели с обеих
+// сторон — это ~40 символов и колонке пришлось бы стать ШИРЕ, чем две
+// прежние колонки дат вместе (то есть отнять место у диаграммы, а не
+// добавить). Год и день недели у обеих дат почти всегда избыточны при
+// показе диапазона — здесь день недели убран, а год показан один раз в
+// конце, если обе даты попадают в один год (иначе — у обеих). Это и даёт
+// реальную экономию ширины, которую просили, при этом ничего важного не
+// теряется.
+function formatPeriod(start, end) {
+  const sameYear = start.getFullYear() === end.getFullYear();
+  const startOpts = sameYear
+    ? { day: "numeric", month: "short" }
+    : { day: "numeric", month: "short", year: "numeric" };
+  const endOpts = { day: "numeric", month: "short", year: "numeric" };
+  return (
+    start.toLocaleDateString("ru", startOpts) +
+    " – " +
+    end.toLocaleDateString("ru", endOpts)
+  );
+}
+
+function pluralDays(n) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return "день";
+  if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return "дня";
+  return "дней";
+}
+
+// Свой тултип вместо дефолтного: у библиотеки он на английском ("Duration:
+// N day(s)"), с датами в формате "2-8-2026", уродливой тенью без скругления
+// и лишним пустым абзацем внизу (дефолтный компонент всегда рендерит блок
+// под прогресс, даже когда его нет — отсюда "лишний воздух"). Прогресс мы
+// не используем (задачи правятся только через чат), поэтому просто не
+// рендерим этот блок вовсе.
+function TaskTooltip({ task, fontSize, fontFamily }) {
+  const days = Math.max(1, Math.round((task.end - task.start) / 86400000));
+  return (
+    <div className="gantt-tooltip" style={{ fontSize, fontFamily }}>
+      <div className="gantt-tooltip__title">{task.name}</div>
+      <div className="gantt-tooltip__dates">{formatPeriod(task.start, task.end)}</div>
+      <div className="gantt-tooltip__duration">
+        Длительность: {days} {pluralDays(days)}
+      </div>
+    </div>
+  );
 }
 
 // Библиотека сама локализует названия дней недели и месяцев в шапке
@@ -61,11 +97,8 @@ function TaskListHeader({ headerHeight, fontFamily, fontSize }) {
       <div className="gantt-list-header__cell" style={{ width: NAME_COL_WIDTH }}>
         Задача
       </div>
-      <div className="gantt-list-header__cell gantt-list-header__cell--date" style={{ width: DATE_COL_WIDTH }}>
-        Начало
-      </div>
-      <div className="gantt-list-header__cell gantt-list-header__cell--date" style={{ width: DATE_COL_WIDTH }}>
-        Окончание
+      <div className="gantt-list-header__cell gantt-list-header__cell--date" style={{ width: PERIOD_COL_WIDTH }}>
+        Период
       </div>
     </div>
   );
@@ -75,7 +108,7 @@ function TaskListHeader({ headerHeight, fontFamily, fontSize }) {
 // обрезается многоточием на деле, потому что внутри table-cell стоит
 // display:flex без min-width:0 — флекс-контейнер не сжимается и текст
 // вылезает поверх соседней колонки на длинных названиях задач. Здесь
-// сжатие явно разрешено (min-width: 0 в CSS), плюс короткий формат дат.
+// сжатие явно разрешено (min-width: 0 в CSS), плюс компактный формат дат.
 function TaskListTable({ rowHeight, tasks }) {
   return (
     <div className="gantt-list-table">
@@ -88,11 +121,8 @@ function TaskListTable({ rowHeight, tasks }) {
           >
             <span className="gantt-list-cell__truncate">{t.name}</span>
           </div>
-          <div className="gantt-list-cell gantt-list-cell--date" style={{ width: DATE_COL_WIDTH }}>
-            {formatShortDate(t.start)}
-          </div>
-          <div className="gantt-list-cell gantt-list-cell--date" style={{ width: DATE_COL_WIDTH }}>
-            {formatShortDate(t.end)}
+          <div className="gantt-list-cell gantt-list-cell--date" style={{ width: PERIOD_COL_WIDTH }}>
+            {formatPeriod(t.start, t.end)}
           </div>
         </div>
       ))}
@@ -140,6 +170,7 @@ export default function GanttChart({ tasks, onSelectTask }) {
         headerHeight={62}
         TaskListHeader={TaskListHeader}
         TaskListTable={TaskListTable}
+        TooltipContent={TaskTooltip}
         todayColor="rgba(109, 94, 244, 0.08)"
         onClick={(task) => onSelectTask(task.id)}
         onDoubleClick={(task) => onSelectTask(task.id)}
