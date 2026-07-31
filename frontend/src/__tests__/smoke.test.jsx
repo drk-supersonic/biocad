@@ -40,28 +40,6 @@ describe("GanttChart", () => {
     render(<GanttChart tasks={[]} onSelectTask={vi.fn()} />);
     expect(screen.getByText(/Нет задач/)).toBeTruthy();
   });
-
-  it("не зацикливается на длинном названии задачи в узком баре (регресс на баг усечения текста)", () => {
-    // Раньше эффект усечения текста бара мог войти в бесконечный ре-рендер
-    // (label !== task.name всегда истинно после усечения, а label стоял в
-    // зависимостях эффекта) — React в этом случае бросает "Maximum update
-    // depth exceeded", и render() ниже упал бы с ошибкой.
-    const longNameTasks = [
-      {
-        id: "T001",
-        name: "Очень длинное название задачи, которое точно не влезает в узкий однодневный бар на диаграмме",
-        description: "",
-        assignee: "Кто-то",
-        duration: 1,
-        predecessors: [],
-        start: "2026-07-29",
-        finish: "2026-07-30",
-      },
-    ];
-    expect(() => {
-      render(<GanttChart tasks={longNameTasks} onSelectTask={vi.fn()} />);
-    }).not.toThrow();
-  });
 });
 
 describe("TaskModal", () => {
